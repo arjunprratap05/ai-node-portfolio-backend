@@ -1,19 +1,16 @@
-// api/index.js (or api/server.js/app.js)
 const express = require('express');
-const cors = require('cors'); 
+const cors = require('cors');
 
 const app = express();
 
-// --- IMPORTANT: Configure CORS ---
+// --- CORS Configuration ---
 const allowedOrigins = [
   'http://localhost:3000', 
   'https://portfolio-green-three-20.vercel.app', 
-  
 ];
 
 app.use(cors({
   origin: function (origin, callback) {
-    
     if (!origin) return callback(null, true);
     if (allowedOrigins.indexOf(origin) === -1) {
       const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
@@ -21,22 +18,26 @@ app.use(cors({
     }
     return callback(null, true);
   },
-  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE', 
-  credentials: true, 
-  optionsSuccessStatus: 204 
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  credentials: true,
+  optionsSuccessStatus: 204
 }));
 // --- END CORS Configuration ---
 
 app.use(express.json());
 
-// ... your existing routes ...
 
-app.post('/api/gemini-chat', async (req, res) => { // Assuming this is your endpoint
-    // Your Gemini chat logic here
-    // ...
+app.get('/', (req, res) => {
+  res.send('AI Backend Server is Running!');
+});
+
+
+app.post('/api/gemini-chat', async (req, res) => {
+
     try {
-        // Placeholder for your actual Gemini AI call
-        const geminiResponse = "This is a response from Arjun AI!"; 
+        const { message } = req.body;
+        
+        const geminiResponse = `You said: "${message}". This is a placeholder AI response!`; 
         res.json({ response: geminiResponse });
     } catch (error) {
         console.error("Gemini AI Error:", error);
@@ -44,10 +45,8 @@ app.post('/api/gemini-chat', async (req, res) => { // Assuming this is your endp
     }
 });
 
-
 module.exports = app;
 
-// Optional: for local testing
 if (process.env.NODE_ENV !== 'production') {
     const port = process.env.PORT || 5000;
     app.listen(port, () => {
