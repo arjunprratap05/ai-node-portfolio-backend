@@ -1,59 +1,56 @@
-// ai-backend/server.js
-require('dotenv').config(); // Load environment variables from .env first
-
+// api/index.js (or api/server.js/app.js)
 const express = require('express');
-const cors = require('cors');
-const chatRoutes = require('./routes/chatRoutes');
+const cors = require('cors'); 
 
 const app = express();
-const PORT = process.env.PORT || 5000;
 
-
+// --- IMPORTANT: Configure CORS ---
 const allowedOrigins = [
   'http://localhost:3000', 
-  'http://192.168.68.100:3000', 
-  'https://portfolio-green-three-20.vercel.app'
+  'https://portfolio-green-three-20.vercel.app', 
   
 ];
 
-if (process.env.FRONTEND_ORIGIN && !allowedOrigins.includes(process.env.FRONTEND_ORIGIN)) {
-  allowedOrigins.push(process.env.FRONTEND_ORIGIN);
-}
-
 app.use(cors({
-  credentials: true, 
   origin: function (origin, callback) {
     
     if (!origin) return callback(null, true);
-   
     if (allowedOrigins.indexOf(origin) === -1) {
-      const msg = `The CORS policy for this site does not allow access from the specified Origin: ${origin}.`;
+      const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
       return callback(new Error(msg), false);
     }
     return callback(null, true);
   },
-  methods: ['GET', 'POST', 'PUT', 'DELETE'], 
-  allowedHeaders: ['Content-Type', 'Authorization'] 
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE', 
+  credentials: true, 
+  optionsSuccessStatus: 204 
 }));
+// --- END CORS Configuration ---
 
-app.use(express.json()); 
-app.use('/api', chatRoutes); 
+app.use(express.json());
 
+// ... your existing routes ...
 
-app.get('/', (req, res) => {
-  res.status(200).send('AI Backend Server is Running!');
+app.post('/api/gemini-chat', async (req, res) => { // Assuming this is your endpoint
+    // Your Gemini chat logic here
+    // ...
+    try {
+        // Placeholder for your actual Gemini AI call
+        const geminiResponse = "This is a response from Arjun AI!"; 
+        res.json({ response: geminiResponse });
+    } catch (error) {
+        console.error("Gemini AI Error:", error);
+        res.status(500).json({ error: "Failed to get response from AI." });
+    }
 });
 
-
-app.use((err, req, res, next) => {
-  console.error(err.stack); 
-  res.status(500).json({ error: 'Something went wrong on the server!' });
-});
-
-
-app.listen(PORT, () => {
-  console.log(`AI Backend Server running on port ${PORT}`);
-  console.log(`CORS allowed origins: ${allowedOrigins.join(', ')}`); 
-});
 
 module.exports = app;
+
+// Optional: for local testing
+if (process.env.NODE_ENV !== 'production') {
+    const port = process.env.PORT || 5000;
+    app.listen(port, () => {
+        console.log(`Local server listening at http://localhost:${port}`);
+    });
+}
