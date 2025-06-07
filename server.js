@@ -3,10 +3,9 @@ const cors = require('cors');
 
 const app = express();
 
-// --- CORS Configuration ---
 const allowedOrigins = [
-  'http://localhost:3000', // For local React development
-  'https://portfolio-green-three-20.vercel.app', // <-- YOUR DEPLOYED FRONTEND URL
+  'http://localhost:3000',
+  'https://portfolio-green-three-20.vercel.app', 
 ];
 
 app.use(cors({
@@ -26,19 +25,22 @@ app.use(cors({
 
 app.use(express.json());
 
-// --- Add a root handler for health check (prevents "Cannot GET /") ---
+
 app.get('/', (req, res) => {
-  res.send('AI Backend Server is Running!');
+  res.send('AI Backend Server is Running!'); 
 });
 
-// --- Your actual API endpoint for the chatbot ---
+
+
+app.get('/api/hello', (req, res) => {
+    res.json({ message: 'Hello from Vercel Serverless Function!' });
+});
+
 app.post('/api/gemini-chat', async (req, res) => {
-    // ... your existing Gemini AI logic ...
+
     try {
-        const { message } = req.body;
-        // Assuming sendMessageToAI is a function you'd call here to interact with Gemini
-        // For example:
-        const geminiResponse = `You said: "${message}". This is a placeholder AI response!`; 
+        
+        const geminiResponse = "This is a response from Arjun AI!";
         res.json({ response: geminiResponse });
     } catch (error) {
         console.error("Gemini AI Error:", error);
@@ -48,7 +50,6 @@ app.post('/api/gemini-chat', async (req, res) => {
 
 module.exports = app;
 
-// Optional: for local testing
 if (process.env.NODE_ENV !== 'production') {
     const port = process.env.PORT || 5000;
     app.listen(port, () => {
