@@ -1,12 +1,13 @@
 const express = require('express');
 const cors = require('cors');
+const chatRoutes = require('./routes/chatRoute'); 
 
 const app = express();
 
 // --- CORS Configuration ---
 const allowedOrigins = [
-  'http://localhost:3000', 
-  'https://portfolio-green-three-20.vercel.app', 
+  'http://localhost:3000',
+  'https://portfolio-green-three-20.vercel.app',
 ];
 
 app.use(cors({
@@ -18,7 +19,7 @@ app.use(cors({
     }
     return callback(null, true);
   },
-  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  methods: 'GET,HEAD,PUT,PATCH,POST', 
   credentials: true,
   optionsSuccessStatus: 204
 }));
@@ -26,24 +27,13 @@ app.use(cors({
 
 app.use(express.json());
 
-
 app.get('/', (req, res) => {
   res.send('AI Backend Server is Running!');
 });
 
+app.use('/api', chatRoutes);
 
-app.post('/api/gemini-chat', async (req, res) => {
 
-    try {
-        const { message } = req.body;
-        
-        const geminiResponse = `You said: "${message}". This is a placeholder AI response!`; 
-        res.json({ response: geminiResponse });
-    } catch (error) {
-        console.error("Gemini AI Error:", error);
-        res.status(500).json({ error: "Failed to get response from AI." });
-    }
-});
 
 module.exports = app;
 
