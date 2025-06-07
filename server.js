@@ -1,13 +1,13 @@
 const express = require('express');
 const cors = require('cors');
+
 const chatRoutes = require('./routes/chatRoute'); 
 
 const app = express();
 
-
 const allowedOrigins = [
   'http://localhost:3000',
-  'https://portfolio-green-three-20.vercel.app',
+  'https://portfolio-green-three-20.vercel.app', 
 ];
 
 app.use(cors({
@@ -19,23 +19,16 @@ app.use(cors({
     }
     return callback(null, true);
   },
-  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE', 
   credentials: true,
   optionsSuccessStatus: 204
 }));
 
-
 app.use(express.json());
 
-
 app.get('/', (req, res) => {
-  res.send('AI Backend Server is Running!');
+  res.send('AI Backend Server is Running!'); 
 });
-
-app.get('/api/hello', (req, res) => {
-    res.json({ message: 'Hello from Vercel Serverless Function!' });
-});
-
 
 app.use('/api', chatRoutes); 
 

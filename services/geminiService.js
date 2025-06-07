@@ -8,7 +8,6 @@ const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY);
 
 const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" }); 
 
-// --- START: YOUR KNOWLEDGE BASE (Populated from Arjun_Pratap_SoftwareDeveloper_Resume.pdf) ---
 const arjunKnowledgeBase = `
   Arjun's full name is Arjun Pratap. 
   He is a Problem-solving-oriented Full Stack Developer with 3+ years of experience transforming business challenges into effective, scalable software solutions.
@@ -26,22 +25,19 @@ const arjunKnowledgeBase = `
   - Employed AI copilots and prompt engineering to streamline development and debugging. 
 
   **Experience:**
-  - **Software Developer at NIIT Ltd, Gurugram, India (Sep 2022 - Present):** 
-    - Developed an Excel bulk upload system using ASP.NET, streamlining data input. 
+  - **Software Developer at NIIT Ltd, Gurugram, India (Sep 2022 - Present):** - Developed an Excel bulk upload system using ASP.NET, streamlining data input. 
     - Created reusable modules for automation tools.
     - Leveraged GitHub Copilot to accelerate development.
     - Used AI tools to generate test cases and improve test coverage. 
     - Collaborated with cross-functional teams to resolve production incidents.
 
-  **Technical Skills:** 
-  - **Languages/Frameworks:** ASP.NET (Familiar), REST APIs, JavaScript, React.JS, NodeJS, VueJS, Java, Python, PHP. 
+  **Technical Skills:** - **Languages/Frameworks:** ASP.NET (Familiar), REST APIs, JavaScript, React.JS, NodeJS, VueJS, Java, Python, PHP. 
   - **Cloud & DevOps:** Docker, Kubernetes, Git, GitHub Actions, Apache, Nginx, AWS (EC2, S3), Firebase, Appwrite. 
   - **AI/ML Tools:** TensorFlow Lite, GitHub Copilot, ChatGPT, Prompt Engineering, OCR Integration. 
   - **Data Tools:** SQL Server, PostgreSQL, MySQL, MongoDB, PowerBI. 
   - **Soft Skills:** Root-Cause Analysis, Agile Methodology, Team Leadership, Communication. 
 
-  **Projects:** 
-  - **Portfolio Website (ReactJS, Vite, CSS, JavaScript) - Feb 2025 - Present:** Created a responsive developer portfolio featuring downloadable CV, API-integrated contact form, and live social links. Used AI prompts to enhance UX writing and developer content. 
+  **Projects:** - **Portfolio Website (ReactJS, Vite, CSS, JavaScript) - Feb 2025 - Present:** Created a responsive developer portfolio featuring downloadable CV, API-integrated contact form, and live social links. Used AI prompts to enhance UX writing and developer content. 
   - **Discount Page Optimization (ASP.NET, SQL, JavaScript) - Jul 2024 - Jan 2025:** Integrated referral logic and course-based filtering to improve usability of the coupon experience.
   - **Mega Blog CMS (ReactJS, Vite, Appwrite) - Feb 2024 - Jul 2024:** Built a modular blogging platform with AI-assisted formatting and content publishing. 
   - **Task Tracker App (ReactJS, Vite) - Jan 2024 - Jul 2024:** Designed a Kanban-style web app to manage team tasks with status tracking and filtering features.
@@ -50,22 +46,21 @@ const arjunKnowledgeBase = `
   - **Manuscript OCR App (Android, TensorFlow Lite) - Sep 2021 - May 2022:** Enabled real-time handwritten text recognition, offline use, and text-to-speech for accessibility.
   - **QR Inventory System (Web, Android) - Feb 2021 - Aug 2021:** Developed a cross-platform QR-based system for inventory tracking and stock status updates.
 
-  **Education:** 
-  - **Ramrao Adik Institute of Technology, Mumbai University:** B.Tech in Computer Engineering (2018-2022), CGPA: 7.30/10.
+  **Education:** - **Ramrao Adik Institute of Technology, Mumbai University:** B.Tech in Computer Engineering (2018-2022), CGPA: 7.30/10.
   - **SRP College, Bihar School Examination Board (BSEB):** Senior Secondary (XII) (2017). 
   - **Delhi Public School, Patna, Central Board (CBSE):** Secondary (X) (2015). 
 
-  **Certifications:** 
-  - AWS Certified Solutions Architect Associate (In Progress)
+  **Certifications:** - AWS Certified Solutions Architect Associate (In Progress)
   - RDBMS Essentials & T-SQL View Certificate 
   - Programming in Java View Certificate 
   - Android Development (NIIT) 
   - DSA with Java (NPTEL) 
   - Object-Oriented C++ View Certificate
 `;
-// --- END: YOUR KNOWLEDGE BASE ---
+
 
 async function getGeminiResponse(userMessage) {
+  
   if (!process.env.GOOGLE_API_KEY) {
     throw new Error('Google AI API Key is missing. Cannot communicate with Gemini.');
   }
@@ -87,13 +82,13 @@ async function getGeminiResponse(userMessage) {
       Arjun AI's Answer:
     `;
 
+    
     const result = await model.generateContent(fullPrompt);
     const response = await result.response;
     const text = response.text(); 
-    return text;
+    return text; 
   } catch (error) {
     console.error("Error in geminiService.getGeminiResponse:", error.message);
-    
     
     throw new Error(`Failed to get response from Google AI: ${error.message}. Please ensure your API key is valid, the model is correct, and there's a stable network connection.`);
   }
