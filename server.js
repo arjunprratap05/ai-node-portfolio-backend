@@ -1,11 +1,13 @@
 const express = require('express');
 const cors = require('cors');
+const chatRoutes = require('./routes/chatRoute'); 
 
 const app = express();
 
+
 const allowedOrigins = [
   'http://localhost:3000',
-  'https://portfolio-green-three-20.vercel.app', 
+  'https://portfolio-green-three-20.vercel.app',
 ];
 
 app.use(cors({
@@ -21,32 +23,21 @@ app.use(cors({
   credentials: true,
   optionsSuccessStatus: 204
 }));
-// --- END CORS Configuration ---
+
 
 app.use(express.json());
 
 
 app.get('/', (req, res) => {
-  res.send('AI Backend Server is Running!'); 
+  res.send('AI Backend Server is Running!');
 });
-
-
 
 app.get('/api/hello', (req, res) => {
     res.json({ message: 'Hello from Vercel Serverless Function!' });
 });
 
-app.post('/api/gemini-chat', async (req, res) => {
 
-    try {
-        
-        const geminiResponse = "This is a response from Arjun AI!";
-        res.json({ response: geminiResponse });
-    } catch (error) {
-        console.error("Gemini AI Error:", error);
-        res.status(500).json({ error: "Failed to get response from AI." });
-    }
-});
+app.use('/api', chatRoutes); 
 
 module.exports = app;
 
