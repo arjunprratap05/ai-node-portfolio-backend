@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const chatRoutes = require('./routes/chatRoute'); 
+
 const app = express();
 
 const allowedOrigins = [
@@ -31,7 +32,7 @@ app.get('/', (req, res) => {
 app.post('/api/gemini-chat', async (req, res) => {
     
     try {
-        const geminiResponse = await chatRoutes.handleChatRequest(req, res); 
+        const geminiResponse = "Arjun" ; 
         res.json({ response: geminiResponse });
     } catch (error) {
         console.error("Gemini AI Error:", error);
