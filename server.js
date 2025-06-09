@@ -35,15 +35,14 @@ app.get('/', (req, res) => {
 
 app.post('/api/gemini-chat', async (req, res) => {
     // Your Gemini chat logic here
-    app.use('/api', chatRoutes); 
-    // try {
-    //     // Placeholder for your actual Gemini AI call
-    //     const geminiResponse = "Arjun" ; // Replace with actual call to Gemini AI service
-    //     res.json({ response: geminiResponse });
-    // } catch (error) {
-    //     console.error("Gemini AI Error:", error);
-    //     res.status(500).json({ error: "Failed to get response from AI." });
-    // }
+    try {
+        // Placeholder for your actual Gemini AI call
+        const geminiResponse = app.post('/api', chatRoutes.handleChatRequest(req, res)); ; 
+        res.json({ response: geminiResponse });
+    } catch (error) {
+        console.error("Gemini AI Error:", error);
+        res.status(500).json({ error: "Failed to get response from AI." });
+    }
 });
 
 // Export the Express app as the handler for Vercel
