@@ -37,7 +37,7 @@ app.post('/api/gemini-chat', async (req, res) => {
     // Your Gemini chat logic here
     try {
         // Placeholder for your actual Gemini AI call
-        const geminiResponse = ('/api', chatRoutes);  
+        const geminiResponse = "/routes" ; // Replace with actual call to Gemini AI service
         res.json({ response: geminiResponse });
     } catch (error) {
         console.error("Gemini AI Error:", error);
