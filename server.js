@@ -1,4 +1,3 @@
-// api/index.js (or api/server.js)
 const express = require('express');
 const cors = require('cors');
 
@@ -32,18 +31,12 @@ app.use(express.json());
 app.get('/', (req, res) => {
   res.send('AI Backend Server is Running!'); // Or res.json({ message: 'Server is healthy' });
 });
-// --- END ADDITION ---
-
-// Your existing /api/hello and /api/gemini-chat routes
-app.get('/api/hello', (req, res) => {
-    res.json({ message: 'Hello from Vercel Serverless Function!' });
-});
 
 app.post('/api/gemini-chat', async (req, res) => {
     // Your Gemini chat logic here
     try {
         // Placeholder for your actual Gemini AI call
-        const geminiResponse = "";
+        const geminiResponse = "Hello from Gemini AI!"; // Replace with actual call to Gemini AI service
         res.json({ response: geminiResponse });
     } catch (error) {
         console.error("Gemini AI Error:", error);
