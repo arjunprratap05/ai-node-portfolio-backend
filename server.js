@@ -1,42 +1,38 @@
+// api/index.js (or api/server.js, etc.)
 const express = require('express');
-const cors = require('cors');
-
-const chatRoutes = require('./routes/chatRoute'); 
+const cors = require('cors'); // Don't forget CORS!
 
 const app = express();
+const port = process.env.PORT || 5000; // Vercel sets its own PORT, but good practice for local
 
-const allowedOrigins = [
-  'http://localhost:3000',
-  'https://portfolio-green-three-20.vercel.app', 
-];
-
+// CORS configuration (adjust as needed for your frontend's domain)
 app.use(cors({
-  origin: function (origin, callback) {
-    if (!origin) return callback(null, true);
-    if (allowedOrigins.indexOf(origin) === -1) {
-      const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
-      return callback(new Error(msg), false);
-    }
-    return callback(null, true);
-  },
-  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE', 
-  credentials: true,
-  optionsSuccessStatus: 204
+    origin: process.env.FRONTEND_URL || 'http://localhost:3000' // Your React app's domain
 }));
 
-app.use(express.json());
+app.use(express.json()); // For parsing JSON request bodies
 
-app.get('/', (req, res) => {
-  res.send('AI Backend Server is Running!'); 
+app.get('/api/hello', (req, res) => {
+    res.json({ message: 'Hello from Vercel Serverless Function!' });
 });
 
-app.use('/api', chatRoutes); 
+app.post('/api/data', (req, res) => {
+    const { item } = req.body;
+    res.json({ received: item, status: 'success' });
+});
 
+// Example of using an environment variable
+app.get('/api/secret', (req, res) => {
+    const secret = process.env.MY_SECRET_KEY || 'No secret set!';
+    res.json({ secretMessage: `The secret is: ${secret}` });
+});
+
+// This is crucial for Vercel: export the app as a handler
 module.exports = app;
 
+// Optionally, for local testing:
 if (process.env.NODE_ENV !== 'production') {
-    const port = process.env.PORT || 5000;
     app.listen(port, () => {
-        console.log(`Local server listening at http://localhost:${port}`);
+        console.log(`Server listening at http://localhost:${port}`);
     });
 }
