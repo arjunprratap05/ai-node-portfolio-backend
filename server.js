@@ -1,13 +1,9 @@
-// server.js
 const express = require('express');
 const cors = require('cors');
-// CRITICAL: Import your chat routes. Ensure this path is correct.
-// It assumes chatRoute.js is in a 'routes' folder at the same level as server.js.
-const chatRoutes = require('./routes/chatRoute'); 
 
 const app = express();
 
-// --- CORS Configuration ---
+// --- CORS Configuration (from previous solution) ---
 const allowedOrigins = [
   'http://localhost:3000',
   'https://portfolio-green-three-20.vercel.app', // Your deployed frontend URL
@@ -22,28 +18,31 @@ app.use(cors({
     }
     return callback(null, true);
   },
-  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE', // Allow all necessary methods, especially POST for your chat API
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   credentials: true,
   optionsSuccessStatus: 204
 }));
+// --- END CORS Configuration ---
 
-app.use(express.json()); // Middleware to parse JSON request bodies
+app.use(express.json());
 
-// --- Root path handler for health checks ---
+// --- ADD THIS ROUTE HANDLER ---
+// This handles GET requests to the root path (e.g., https://ai-node-portfolio-backend.vercel.app/)
 app.get('/', (req, res) => {
-  res.send('AI Backend Server is Running!'); 
+  res.send('AI Backend Server is Running!'); // Or res.json({ message: 'Server is healthy' });
 });
 
-// --- API Route Integration ---
-// This is the CRITICAL line that connects your Express app to your modular chat routes.
-// All requests starting with '/api' will be handled by chatRoutes.
-// So, '/api/gemini-chat' (from your frontend) will be routed correctly here.
-app.use('/api', chatRoutes); 
-
-// >>>>>>> DO NOT ADD A SEPARATE app.post('/api/gemini-chat', ...) HERE <<<<<<<
-// That will override the route from chatRoutes and return a hardcoded response.
-// If you have a separate app.post('/api/gemini-chat', ...) block, REMOVE IT COMPLETELY.
-
+app.post('/api/gemini-chat', async (req, res) => {
+    // Your Gemini chat logic here
+    try {
+        // Placeholder for your actual Gemini AI call
+       // const geminiResponse = "Arjun" ; // Replace with actual call to Gemini AI service
+        res.json({ response: getGeminiResponse });
+    } catch (error) {
+        console.error("Gemini AI Error:", error);
+        res.status(500).json({ error: "Failed to get response from AI." });
+    }
+});
 
 // Export the Express app as the handler for Vercel
 module.exports = app;
