@@ -1,13 +1,11 @@
 const express = require('express');
 const cors = require('cors');
 const chatRoutes = require('./routes/chatRoute'); 
-
 const app = express();
 
-// --- CORS Configuration (from previous solution) ---
 const allowedOrigins = [
   'http://localhost:3000',
-  'https://portfolio-green-three-20.vercel.app', // Your deployed frontend URL
+  'https://portfolio-green-three-20.vercel.app', 
 ];
 
 app.use(cors({
@@ -23,21 +21,17 @@ app.use(cors({
   credentials: true,
   optionsSuccessStatus: 204
 }));
-// --- END CORS Configuration ---
 
 app.use(express.json());
 
-// --- ADD THIS ROUTE HANDLER ---
-// This handles GET requests to the root path (e.g., https://ai-node-portfolio-backend.vercel.app/)
 app.get('/', (req, res) => {
-  res.send('AI Backend Server is Running!'); // Or res.json({ message: 'Server is healthy' });
+  res.send('AI Backend Server is Running!'); 
 });
 
 app.post('/api/gemini-chat', async (req, res) => {
-    // Your Gemini chat logic here
+    
     try {
-        // Placeholder for your actual Gemini AI call
-        const geminiResponse = {arjunKnowledgeBase} ; // Replace with actual call to Gemini AI service
+        const geminiResponse = await chatRoutes.handleChatRequest(req, res); 
         res.json({ response: geminiResponse });
     } catch (error) {
         console.error("Gemini AI Error:", error);
@@ -45,10 +39,8 @@ app.post('/api/gemini-chat', async (req, res) => {
     }
 });
 
-// Export the Express app as the handler for Vercel
 module.exports = app;
 
-// Optional: for local testing
 if (process.env.NODE_ENV !== 'production') {
     const port = process.env.PORT || 5000;
     app.listen(port, () => {
