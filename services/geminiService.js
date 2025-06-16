@@ -29,15 +29,13 @@ const arjunKnowledgeBase = `
     - Employed AI copilots and prompt engineering to streamline development and debugging. 
 
     **Experience:**
-    - **Software Developer at NIIT Ltd, Gurugram, India (Sep 2022 - Present):** 
-        - Developed an Excel bulk upload system using ASP.NET, streamlining data input. 
+    - **Software Developer at NIIT Ltd, Gurugram, India (Sep 2022 - Present):** - Developed an Excel bulk upload system using ASP.NET, streamlining data input. 
         - Created reusable modules for automation tools. 
         - Leveraged GitHub Copilot to accelerate development of repetitive logic and components. 
         - Used AI tools to generate test cases and improve test coverage and confidence. 
         - Collaborated with cross-functional teams to resolve production incidents with minimal delay. 
 
-    **Technical Skills:** 
-    - **Languages/Frameworks:** ASP.NET (Familiar), REST APIs, JavaScript, React.JS, NodeJS, VueJS, Java, Python, PHP.
+    **Technical Skills:** - **Languages/Frameworks:** ASP.NET (Familiar), REST APIs, JavaScript, React.JS, NodeJS, VueJS, Java, Python, PHP.
     - **Cloud & DevOps:** Docker, Kubernetes, Git, GitHub Actions, Apache, Nginx, AWS (EC2, S3), Firebase, Appwrite.
     - **AI/ML Tools:** TensorFlow Lite, GitHub Copilot, ChatGPT, Prompt Engineering, OCR Integration.
     - **Data Tools:** SQL Server, PostgreSQL, MySQL, MongoDB, PowerBI.
@@ -54,13 +52,11 @@ const arjunKnowledgeBase = `
     - **Manuscript OCR App (Android, TensorFlow Lite) - Sep 2021 - May 2022:** Enabled real-time handwritten text recognition, offline use, and text-to-speech for accessibility. 
     - **QR Inventory System (Web, Android) - Feb 2021 - Aug 2021:** Developed a cross-platform QR-based system for inventory tracking and stock status updates. 
 
-    **Education:** 
-    - **Ramrao Adik Institute of Technology, Mumbai University:** B.Tech in Computer Engineering (2018-2022), CGPA: 7.30/10.
+    **Education:** - **Ramrao Adik Institute of Technology, Mumbai University:** B.Tech in Computer Engineering (2018-2022), CGPA: 7.30/10.
     - **SRP College, Bihar School Examination Board (BSEB):** Senior Secondary (XII) (2017).
     - **Delhi Public School, Patna, Central Board (CBSE):** Secondary (X) (2015). 
 
-    **Certifications:** 
-    - AWS Certified Solutions Architect Associate (In Progress)
+    **Certifications:** - AWS Certified Solutions Architect Associate (In Progress)
     - RDBMS Essentials & T-SQL View Certificate 
     - Programming in Java View Certificate 
     - Android Development (NIIT) 
@@ -75,19 +71,6 @@ async function getGeminiResponse(userMessage) {
     }
 
     try {
-        
-        const now = new Date();
-        const currentHour = now.getHours();
-        let greeting = "";
-
-        if (currentHour >= 5 && currentHour < 12) {
-            greeting = "Good Morning!";
-        } else if (currentHour >= 12 && currentHour < 18) {
-            greeting = "Good Afternoon!";
-        } else {
-            greeting = "Good Evening!";
-        }
-        
         const fullPrompt = `
             You are Arjun AI, a helpful assistant designed to provide information about Arjun.
             Answer the following questions about Arjun based SOLELY on the context provided below.
@@ -107,8 +90,7 @@ async function getGeminiResponse(userMessage) {
         const response = await result.response;
         const text = response.text(); 
         
-        
-        return `${greeting} ${text}`; 
+        return text; 
 
     } catch (error) {
         console.error("Error in geminiService.getGeminiResponse:", error.message);
