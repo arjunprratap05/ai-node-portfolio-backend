@@ -1,12 +1,68 @@
 const { GoogleGenerativeAI } = require('@google/generative-ai');
+const { GoogleSearch } = require('google-search-results-nodejs');
 
 if (!process.env.GOOGLE_API_KEY) {
     console.error("CRITICAL: GOOGLE_API_KEY environment variable is not set. Gemini API calls will fail.");
+    process.exit(1);
+}
+if (!process.env.SERPAPI_KEY) {
+    console.warn("WARNING: SERPAPI_KEY environment variable is not set. Web search functionality will fail.");
 }
 
 const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY);
+const textOnlyModel = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
+const modelWithTools = genAI.getGenerativeModel({
+    model: "gemini-2.0-flash",
+    tools: [
+        {
+            functionDeclarations: [
+                {
+                    name: "performGoogleSearch",
+                    description: "Searches the web for information using Google. Can take one or more search queries.",
+                    parameters: {
+                        type: "object",
+                        properties: {
+                            queries: {
+                                type: "array",
+                                items: { type: "string" },
+                                description: "An array of search queries."
+                            }
+                        },
+                        required: ["queries"]
+                    }
+                }
+            ]
+        }
+    ]
+});
 
-const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" }); 
+async function performGoogleSearch(queries) {
+    if (!process.env.SERPAPI_KEY) {
+        console.error("SERPAPI_KEY is not set. Cannot perform web search.");
+        return [{ error: "SERPAPI_KEY is not configured for web searches." }];
+    }
+
+    const allSearchResults = [];
+    for (const query of queries) {
+        console.log(`Executing SerpApi web search for: "${query}" using google-search-results-nodejs.`);
+        try {
+            
+            const search = new GoogleSearch(process.env.SERPAPI_KEY); 
+        
+            const result = await search.getJson({
+                q: query,
+                engine: "google"
+            });
+            
+            allSearchResults.push({ query: query, organic_results: result.organic_results });
+            
+        } catch (error) {
+            console.error(`Error performing SerpApi search for "${query}":`, error.message);
+            allSearchResults.push({ query: query, error: `Search failed: ${error.message}` });
+        }
+    }
+    return allSearchResults;
+}
 
 const arjunKnowledgeBase = `
   Arjun's full name is Arjun Pratap. He is a Problem-solving-oriented Full Stack Developer with 3+ years of experience transforming business challenges into effective, scalable software solutions. He is familiar with ASP.NET and experienced in modern frontend and backend frameworks including ReactJS, Node.js, and REST APIs. He is skilled in using Docker, GitHub Actions, and AWS for cloud-native deployment. Arjun is adept at applying AI tools like ChatGPT, GitHub Copilot, and TensorFlow Lite for productivity, intelligent automation, and rapid development. His contact number is +91-9820903458 and email is arjun.pratap05@gmail.com. He can be found on LinkedIn, GitHub, and mentions a Portfolio.
@@ -25,7 +81,7 @@ Employed AI copilots and prompt engineering to streamline development and debugg
 
 Experience:
 
-Software Developer at NIIT Ltd, Gurugram, India (Sep 2022 - Present):
+Software Developer at NIIT Ltd, Gurugam, India (Sep 2022 - Present):
 
 Developed an Excel bulk upload system using ASP.NET, streamlining data input and significantly reducing effort.
 
@@ -92,6 +148,41 @@ DSA with Java (NPTEL) View Certificate.
 Object-Oriented C++ View Certificate.
 `;
 
+function isAboutArjun(userMessage) {
+    const lowerCaseMessage = userMessage.toLowerCase();
+    const arjunSpecificKeywords = [
+        "arjun",
+        "arjun pratap",
+        "pratap",
+        "arjun's"
+    ];
+    const pronounKeywords = ["his", "he", "him"];
+    const generalDevKeywords = [
+        "developer",
+        "full stack",
+        "experience",
+        "skills",
+        "projects",
+        "education",
+        "certifications",
+        "contact",
+        "niit",
+        "about",
+        "who" 
+    ];
+
+    if (arjunSpecificKeywords.some(keyword => lowerCaseMessage.includes(keyword))) {
+        return true;
+    }
+
+    if (pronounKeywords.some(keyword => lowerCaseMessage.includes(keyword))) {
+        if (generalDevKeywords.some(keyword => lowerCaseMessage.includes(keyword))) {
+            return true;
+        }
+    }
+    
+    return false;
+}
 
 async function getGeminiResponse(userMessage) {
     if (!process.env.GOOGLE_API_KEY) {
@@ -99,29 +190,69 @@ async function getGeminiResponse(userMessage) {
     }
 
     try {
-        const fullPrompt = `
-            You are Arjun AI, a helpful assistant designed to provide information about Arjun.
-            Answer the following questions about Arjun based SOLELY on the context provided below.
-            If you cannot find the answer within the provided context about Arjun, state that you don't have enough information about Arjun to answer the question, or ask the user to provide more details about what they are looking for regarding Arjun.
-            Do NOT use your general knowledge to answer questions about Arjun.
+        if (isAboutArjun(userMessage)) {
+            const fullPrompt = `
+                You are Arjun AI, a helpful assistant designed to provide information about Arjun.
+                Answer the following questions about Arjun based SOLELY on the context provided below.
+                If you cannot find the answer within the provided context about Arjun, state that you don't have enough information about Arjun to answer the question, or ask the user to provide more details about what they are looking for regarding Arjun.
+                Do NOT use your general knowledge to answer questions about Arjun.
 
-            --- Context about Arjun ---
-            ${arjunKnowledgeBase}
-            --- End of Context ---
+                --- Context about Arjun ---
+                ${arjunKnowledgeBase}
+                --- End of Context ---
 
-            User's Question: ${userMessage}
+                User's Question: ${userMessage}
 
-            Arjun AI's Answer:
-        `;
+                Arjun AI's Answer:
+            `;
 
-        const result = await model.generateContent(fullPrompt);
-        const response = await result.response;
-        const text = response.text(); 
-        
-        return text; 
+            console.log("Answering from Arjun's knowledge base...");
+            const result = await textOnlyModel.generateContent(fullPrompt);
+            const response = await result.response;
+            const text = response.text();
+            return text;
+
+        } else {
+            console.log(`Attempting web search for: "${userMessage}" using performGoogleSearch tool.`);
+
+            const result = await modelWithTools.generateContent({
+                contents: [{ role: "user", parts: [{ text: userMessage }] }],
+            });
+
+            const response = result.response;
+            const functionCall = response.candidates && response.candidates[0] && response.candidates[0].content && response.candidates[0].content.functionCall;
+
+            if (functionCall && functionCall.name === "performGoogleSearch") {
+                const searchQueries = functionCall.args.queries;
+                const toolResponse = await performGoogleSearch(searchQueries);
+                console.log("Sending tool results back to model for synthesis...");
+                const finalAnswerResult = await textOnlyModel.generateContent({
+                    contents: [
+                        { role: "user", parts: [{ text: userMessage }] },
+                        
+                        { role: "function", name: "performGoogleSearch", parts: [{ text: JSON.stringify(toolResponse) }] }
+                    ]
+                });
+                return finalAnswerResult.response.text();
+
+            } else {
+                console.log("Model generated a direct response (no tool call for web search).");
+                return response.text();
+            }
+        }
 
     } catch (error) {
         console.error("Error in geminiService.getGeminiResponse:", error.message);
+        
+        if (error.message.includes("API Key is missing") || error.message.includes("authentication")) {
+            throw new Error(`Authentication error: ${error.message}. Please check your GOOGLE_API_KEY.`);
+        }
+        if (error.message.includes("Quota exceeded")) {
+             throw new Error(`API quota exceeded: ${error.message}. You might have hit your rate limit.`);
+        }
+        if (error.message.includes("SerpApi") || error.message.includes("google-search-results-nodejs")) {
+             throw new Error(`Web search error: ${error.message}. Please check your SERPAPI_KEY or SerpApi service status.`);
+        }
         throw new Error(`Failed to get response from Google AI: ${error.message}. Please ensure your API key is valid, the model is correct, and there's a stable network connection.`);
     }
 }
