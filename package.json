@@ -17,6 +17,7 @@
     "express": "^5.1.0",
     "google": "^2.1.0",
     "google-search-results-nodejs": "^2.1.0",
-    "lodash": "^4.17.21"
+    "lodash": "^4.17.21",
+    "nodemailer": "^7.0.5"
   }
 }

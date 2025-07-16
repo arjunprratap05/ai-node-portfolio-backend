@@ -1,15 +1,15 @@
-require('dotenv').config(); 
+require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const chatRoutes = require('./routes/chatRoutes');
+const contactRoutes = require('./routes/contactRoutes');
 const app = express();
 const PORT = process.env.PORT || 5000;
 
 const allowedOrigins = [
   'http://localhost:3000',
-  'http://192.168.68.101:3000',
-  'https://portfolio-green-three-20.vercel.app', 
-  
+  'http://192.168.68.103:3000',
+  'https://portfolio-green-three-20.vercel.app',
 ];
 
 if (process.env.FRONTEND_ORIGIN && !allowedOrigins.includes(process.env.FRONTEND_ORIGIN)) {
@@ -26,12 +26,14 @@ app.use(cors({
     }
     return callback(null, true);
   },
-  methods: ['GET', 'POST', 'PUT', 'DELETE'], 
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
-app.use(express.json()); 
+app.use(express.json());
+
 app.use('/api', chatRoutes);
+app.use('/api', contactRoutes); 
 
 app.get('/', (req, res) => {
   res.status(200).send('AI Backend Server is Running!');
