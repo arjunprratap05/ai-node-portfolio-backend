@@ -54,7 +54,13 @@ async function performGoogleSearch(queries) {
                 api_key: process.env.SERPAPI_KEY, 
             });
 
-            allSearchResults.push({ query: query, organic_results: result.organic_results });
+            const simplifiedResults = result.organic_results ? result.organic_results.map(item => ({
+                title: item.title,
+                snippet: item.snippet,
+                link: item.link
+            })) : [];
+            
+            allSearchResults.push({ query: query, results: simplifiedResults });
 
         } catch (error) {
             console.error(`Error performing SerpApi search for "${query}":`, error.message);
@@ -148,7 +154,7 @@ const arjunKnowledgeBase = `
     Object-Oriented C++ View Certificate.
 `;
 
-let currentSubject = null; 
+let lastIdentifiedSubject = null;
 
 function isAboutArjun(userMessage) {
     const lowerCaseMessage = userMessage.toLowerCase();
@@ -159,46 +165,41 @@ function isAboutArjun(userMessage) {
         "arjun's"
     ];
     const pronounKeywords = ["his", "he", "him"];
-    const generalDevKeywords = [
-        "developer",
-        "full stack",
-        "experience",
-        "skills",
-        "projects",
-        "education",
-        "certifications",
-        "contact",
-        "niit",
-        "about",
-        "who",
-        "btech" 
+    const arjunRelatedTopics = [
+        "developer", "full stack", "experience", "skills", "projects", "education",
+        "certifications", "contact", "niit", "work", "studies", "btech",
+        "email", "phone", "linkedin", "github", "portfolio", "college", "university" 
+    ];
+    const generalKnowledgeKeywords = [
+        "who is", "what is", "where is", "how many", "founder", 
+        "capital of", "weather", "news", "definition of", "meaning of"
     ];
 
     if (arjunSpecificKeywords.some(keyword => lowerCaseMessage.includes(keyword))) {
-        currentSubject = 'arjun'; 
+        lastIdentifiedSubject = 'arjun'; 
         return true;
     }
 
-    if (pronounKeywords.some(keyword => lowerCaseMessage.includes(keyword)) && currentSubject === 'arjun') {
-        
-        if (generalDevKeywords.some(keyword => lowerCaseMessage.includes(keyword))) {
+    if (pronounKeywords.some(keyword => lowerCaseMessage.includes(keyword))) {
+        if (lastIdentifiedSubject === 'arjun' && 
+            arjunRelatedTopics.some(topic => lowerCaseMessage.includes(topic))) {
             return true;
         }
     }
+
+    if (generalKnowledgeKeywords.some(keyword => lowerCaseMessage.includes(keyword)) &&
+        !arjunSpecificKeywords.some(keyword => lowerCaseMessage.includes(keyword))) {
+        lastIdentifiedSubject = null; 
+        return false;
+    }
+
+    if (lastIdentifiedSubject === 'arjun' && !arjunRelatedTopics.some(topic => lowerCaseMessage.includes(topic))) {
+         
+         lastIdentifiedSubject = null; 
+         return false;
+    }
     
-    if (!arjunSpecificKeywords.some(keyword => lowerCaseMessage.includes(keyword)) && 
-        generalDevKeywords.some(keyword => lowerCaseMessage.includes(keyword)) &&
-        currentSubject === 'arjun') {
-            return true; 
-    }
-
-    if (!arjunSpecificKeywords.some(keyword => lowerCaseMessage.includes(keyword)) && 
-        !pronounKeywords.some(keyword => lowerCaseMessage.includes(keyword))) {
-        currentSubject = null;
-    }
-
-
-    return false;
+    return false; 
 }
 
 async function getGeminiResponse(userMessage) {
@@ -207,13 +208,15 @@ async function getGeminiResponse(userMessage) {
     }
 
     try {
+        
         const messageIsAboutArjun = isAboutArjun(userMessage);
 
-        if (messageIsAboutArjun || currentSubject === 'arjun') {
+        if (messageIsAboutArjun) {
+            console.log("Answering from Arjun's knowledge base...");
             const fullPrompt = `
                 You are Arjun AI, a helpful assistant designed to provide information about Arjun.
                 Answer the following questions about Arjun based SOLELY on the context provided below.
-                If you cannot find the answer within the provided context about Arjun, state that you don't have enough information about Arjun to answer the question, or ask the user to provide more details about what they are looking for regarding Arjun.
+                If you cannot find the answer within the provided context about Arjun, politely state that the information is not available in Arjun's profile or ask the user to rephrase their question about Arjun.
                 Do NOT use your general knowledge to answer questions about Arjun.
 
                 --- Context about Arjun ---
@@ -225,10 +228,10 @@ async function getGeminiResponse(userMessage) {
                 Arjun AI's Answer:
             `;
 
-            console.log("Answering from Arjun's knowledge base...");
             const result = await textOnlyModel.generateContent(fullPrompt);
             const response = await result.response;
             const text = response.text();
+            
             return text;
 
         } else {
@@ -246,34 +249,46 @@ async function getGeminiResponse(userMessage) {
                 const toolResponse = await performGoogleSearch(searchQueries);
                 console.log("Sending tool results back to model for synthesis...");
 
-                const finalAnswerResult = await textOnlyModel.generateContent({
-                    contents: [
-                        { role: "user", parts: [{ text: userMessage }] },
-                        { role: "function", name: "performGoogleSearch", parts: [{ text: JSON.stringify(toolResponse) }] },
-                        { role: "user", parts: [{ text: "Based on the provided search results, please answer the original question. If the results are insufficient, state that you couldn't find the answer." }] }
-                    ]
-                });
-                return finalAnswerResult.response.text();
+                const synthesisPrompt = `
+                    The user asked: "${userMessage}"
+                    Here are the search results: ${JSON.stringify(toolResponse)}
+
+                    Based on these search results, please provide a concise answer to the user's question. 
+                    If the search results are insufficient, state that you couldn't find a clear answer.
+                    Do NOT invent information. Do NOT mention "Arjun" unless the search results themselves are about him.
+                `;
+
+                const finalAnswerResult = await textOnlyModel.generateContent(synthesisPrompt);
+                const finalAnswerText = finalAnswerResult.response.text();
+                
+                return finalAnswerText;
 
             } else {
-                console.log("Model generated a direct response (no tool call for web search).");
-                return response.text();
+                console.log("Model generated a direct response (no tool call for web search or no specific answer).");
+                let directResponse = response.text();
+                
+                if (!directResponse || directResponse.trim() === "") {
+                    directResponse = "I'm sorry, I couldn't find an answer to that question. Please try rephrasing or asking something else.";
+                }
+                return directResponse;
             }
         }
 
     } catch (error) {
         console.error("Error in geminiService.getGeminiResponse:", error.message);
-
+        
+        let errorMessage;
         if (error.message.includes("API Key is missing") || error.message.includes("authentication")) {
-            throw new Error(`Authentication error: ${error.message}. Please check your GOOGLE_API_KEY.`);
+            errorMessage = `Authentication error: ${error.message}. Please check your GOOGLE_API_KEY.`;
+        } else if (error.message.includes("Quota exceeded")) {
+            errorMessage = `API quota exceeded: ${error.message}. You might have hit your rate limit.`;
+        } else if (error.message.includes("SerpApi") || error.message.includes("getJson")) { 
+            errorMessage = `Web search error: ${error.message}. Please check your SERPAPI_KEY or SerpApi service status.`;
+        } else {
+            errorMessage = `I'm sorry, I encountered an internal error: ${error.message}. Please try again later.`;
         }
-        if (error.message.includes("Quota exceeded")) {
-            throw new Error(`API quota exceeded: ${error.message}. You might have hit your rate limit.`);
-        }
-        if (error.message.includes("SerpApi") || error.message.includes("getJson")) { 
-            throw new Error(`Web search error: ${error.message}. Please check your SERPAPI_KEY or SerpApi service status.`);
-        }
-        throw new Error(`Failed to get response from Google AI: ${error.message}. Please ensure your API key is valid, the model is correct, and there's a stable network connection.`);
+        
+        throw new Error(errorMessage);
     }
 }
 
