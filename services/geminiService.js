@@ -168,11 +168,12 @@ function isAboutArjun(userMessage) {
     const arjunRelatedTopics = [
         "developer", "full stack", "experience", "skills", "projects", "education",
         "certifications", "contact", "niit", "work", "studies", "btech",
-        "email", "phone", "linkedin", "github", "portfolio", "college", "university" 
+        "email", "phone", "linkedin", "github", "portfolio", "college", 
+        "university", "schooling", "school", "did"
     ];
     const generalKnowledgeKeywords = [
-        "who is", "what is", "where is", "how many", "founder", 
-        "capital of", "weather", "news", "definition of", "meaning of"
+        "who is", "what is", "where is", "how many", "founder", "microsoft", 
+        "capital of", "weather", "news", "definition of", "meaning of", "tell me about" 
     ];
 
     if (arjunSpecificKeywords.some(keyword => lowerCaseMessage.includes(keyword))) {
@@ -187,20 +188,23 @@ function isAboutArjun(userMessage) {
         }
     }
 
-    if (generalKnowledgeKeywords.some(keyword => lowerCaseMessage.includes(keyword)) &&
-        !arjunSpecificKeywords.some(keyword => lowerCaseMessage.includes(keyword))) {
+    if (generalKnowledgeKeywords.some(keyword => lowerCaseMessage.includes(keyword)) && 
+        !arjunSpecificKeywords.some(keyword => lowerCaseMessage.includes(keyword)) &&
+        !arjunRelatedTopics.some(topic => lowerCaseMessage.includes(topic))) { 
         lastIdentifiedSubject = null; 
         return false;
     }
 
-    if (lastIdentifiedSubject === 'arjun' && !arjunRelatedTopics.some(topic => lowerCaseMessage.includes(topic))) {
-         
-         lastIdentifiedSubject = null; 
-         return false;
+    if (lastIdentifiedSubject === 'arjun' && 
+        !arjunSpecificKeywords.some(keyword => lowerCaseMessage.includes(keyword)) &&
+        !arjunRelatedTopics.some(topic => lowerCaseMessage.includes(topic))) {
+        lastIdentifiedSubject = null; 
+        return false;
     }
-    
-    return false; 
+
+    return false;
 }
+
 
 async function getGeminiResponse(userMessage) {
     if (!process.env.GOOGLE_API_KEY) {
@@ -208,10 +212,10 @@ async function getGeminiResponse(userMessage) {
     }
 
     try {
-        
-        const messageIsAboutArjun = isAboutArjun(userMessage);
+    
+        const shouldQueryArjunKnowledgeBase = isAboutArjun(userMessage);
 
-        if (messageIsAboutArjun) {
+        if (shouldQueryArjunKnowledgeBase) {
             console.log("Answering from Arjun's knowledge base...");
             const fullPrompt = `
                 You are Arjun AI, a helpful assistant designed to provide information about Arjun.
@@ -249,13 +253,15 @@ async function getGeminiResponse(userMessage) {
                 const toolResponse = await performGoogleSearch(searchQueries);
                 console.log("Sending tool results back to model for synthesis...");
 
+                
                 const synthesisPrompt = `
                     The user asked: "${userMessage}"
                     Here are the search results: ${JSON.stringify(toolResponse)}
 
                     Based on these search results, please provide a concise answer to the user's question. 
                     If the search results are insufficient, state that you couldn't find a clear answer.
-                    Do NOT invent information. Do NOT mention "Arjun" unless the search results themselves are about him.
+                    Do NOT invent information.
+                    Do NOT mention "Arjun" or "Arjun Pratap" unless the search results explicitly bring him up as the answer to the current question.
                 `;
 
                 const finalAnswerResult = await textOnlyModel.generateContent(synthesisPrompt);
@@ -264,11 +270,11 @@ async function getGeminiResponse(userMessage) {
                 return finalAnswerText;
 
             } else {
-                console.log("Model generated a direct response (no tool call for web search or no specific answer).");
+                
                 let directResponse = response.text();
                 
-                if (!directResponse || directResponse.trim() === "") {
-                    directResponse = "I'm sorry, I couldn't find an answer to that question. Please try rephrasing or asking something else.";
+                if (!directResponse || directResponse.trim() === "" || directResponse.toLowerCase().includes("i don't have enough information about arjun")) {
+                    directResponse = "I'm sorry, I couldn't find an answer to that question or perform a search right now. Please try rephrasing or asking something else.";
                 }
                 return directResponse;
             }
