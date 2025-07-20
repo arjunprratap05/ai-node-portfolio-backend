@@ -1,8 +1,6 @@
 require('dotenv').config();
 
 const { GoogleGenerativeAI } = require('@google/generative-ai');
-
-
 const { getJson } = require('serpapi');
 
 if (!process.env.GOOGLE_API_KEY) {
@@ -54,7 +52,6 @@ async function performGoogleSearch(queries) {
                 q: query,
                 engine: "google",
                 api_key: process.env.SERPAPI_KEY, 
-                
             });
 
             allSearchResults.push({ query: query, organic_results: result.organic_results });
@@ -151,6 +148,8 @@ const arjunKnowledgeBase = `
     Object-Oriented C++ View Certificate.
 `;
 
+let currentSubject = null; 
+
 function isAboutArjun(userMessage) {
     const lowerCaseMessage = userMessage.toLowerCase();
     const arjunSpecificKeywords = [
@@ -171,18 +170,33 @@ function isAboutArjun(userMessage) {
         "contact",
         "niit",
         "about",
-        "who"
+        "who",
+        "btech" 
     ];
 
     if (arjunSpecificKeywords.some(keyword => lowerCaseMessage.includes(keyword))) {
+        currentSubject = 'arjun'; 
         return true;
     }
 
-    if (pronounKeywords.some(keyword => lowerCaseMessage.includes(keyword))) {
+    if (pronounKeywords.some(keyword => lowerCaseMessage.includes(keyword)) && currentSubject === 'arjun') {
+        
         if (generalDevKeywords.some(keyword => lowerCaseMessage.includes(keyword))) {
             return true;
         }
     }
+    
+    if (!arjunSpecificKeywords.some(keyword => lowerCaseMessage.includes(keyword)) && 
+        generalDevKeywords.some(keyword => lowerCaseMessage.includes(keyword)) &&
+        currentSubject === 'arjun') {
+            return true; 
+    }
+
+    if (!arjunSpecificKeywords.some(keyword => lowerCaseMessage.includes(keyword)) && 
+        !pronounKeywords.some(keyword => lowerCaseMessage.includes(keyword))) {
+        currentSubject = null;
+    }
+
 
     return false;
 }
@@ -193,7 +207,9 @@ async function getGeminiResponse(userMessage) {
     }
 
     try {
-        if (isAboutArjun(userMessage)) {
+        const messageIsAboutArjun = isAboutArjun(userMessage);
+
+        if (messageIsAboutArjun || currentSubject === 'arjun') {
             const fullPrompt = `
                 You are Arjun AI, a helpful assistant designed to provide information about Arjun.
                 Answer the following questions about Arjun based SOLELY on the context provided below.
