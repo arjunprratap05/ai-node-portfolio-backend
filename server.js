@@ -8,7 +8,7 @@ const PORT = process.env.PORT || 5000;
 
 const allowedOrigins = [
   'http://localhost:3000',
-  'http://192.168.68.103:3000',
+  'http://192.168.68.101:3000',
   'https://portfolio-green-three-20.vercel.app',
 ];
 
