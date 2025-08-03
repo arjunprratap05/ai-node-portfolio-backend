@@ -16,12 +16,10 @@ async function getSkills(req, res) {
       title: categoryTitle,
       skills: groupedSkills[categoryTitle].map(skill => ({
         name: skill.name,
-        // The logo is stored in MongoDB, but your frontend uses local assets.
-        // It's more efficient to just fetch name, percentage, and topics.
-        // I've kept logo here for consistency with your existing code.
+        
         logo: skill.logo, 
         percentage: skill.percentage,
-        topics: skill.topics, // Now correctly included from the database
+        topics: skill.topics, 
       })),
     }));
 
@@ -34,7 +32,7 @@ async function getSkills(req, res) {
 
 async function seedSkillsData(req, res) {
   const initialSkills = [
-    // Frontend
+    
     { name: 'HTML', logo: '/assets/tech_logo/html.png', percentage: 95, category: 'Frontend', topics: ['Forms', 'Accessibility', 'Semantic HTML5'] },
     { name: 'CSS', logo: '/assets/tech_logo/css.png', percentage: 90, category: 'Frontend', topics: ['Flexbox', 'Grid', 'Animations'] },
     { name: 'Sass', logo: '/assets/tech_logo/sass.png', percentage: 85, category: 'Frontend', topics: ['Variables', 'Mixins', 'Partials'] },
@@ -48,7 +46,7 @@ async function seedSkillsData(req, res) {
     { name: 'Next JS', logo: '/assets/tech_logo/nextjs.png', percentage: 70, category: 'Frontend', topics: ['Server-side Rendering', 'Routing', 'API Routes'] },
     { name: 'TypeScript', logo: '/assets/tech_logo/typescript.png', percentage: 70, category: 'Frontend', topics: ['Static Typing', 'Interfaces', 'Generics'] }, 
     
-    // Backend
+    
     { name: 'Node JS', logo: '/assets/tech_logo/nodejs.png', percentage: 78, category: 'Backend', topics: ['Express.js', 'Middleware', 'REST APIs'] },
     { name: 'Express JS', logo: '/assets/tech_logo/express.png', percentage: 75, category: 'Backend', topics: ['Routing', 'Middleware', 'Templating'] },
     { name: 'MySQL', logo: '/assets/tech_logo/mysql.png', percentage: 70, category: 'Backend', topics: ['Schemas', 'Queries', 'Database Design'] },
@@ -57,7 +55,7 @@ async function seedSkillsData(req, res) {
     { name: 'PostgreSQL', logo: '/assets/tech_logo/postgre.png', percentage: 68, category: 'Backend', topics: ['Queries', 'Transactions', 'Normalization'] },
     { name: 'Spring Boot', logo: '/assets/tech_logo/springboot.png', percentage: 70, category: 'Backend', topics: ['REST Controllers', 'Dependency Injection'] },
     
-    // Languages
+    
     { name: 'C', logo: '/assets/tech_logo/c.png', percentage: 60, category: 'Languages', topics: ['Pointers', 'Memory Management'] },
     { name: 'C++', logo: '/assets/tech_logo/cpp.png', percentage: 65, category: 'Languages', topics: ['OOP', 'STL'] },
     { name: 'Java', logo: '/assets/tech_logo/java.png', percentage: 70, category: 'Languages', topics: ['OOP', 'Collections', 'Spring'] },
@@ -66,7 +64,7 @@ async function seedSkillsData(req, res) {
     { name: 'Asp.net', logo: '/assets/tech_logo/aspnet.png', percentage: 70, category: 'Languages', topics: ['MVC', 'Web Forms'] },
     { name: 'Asp.net Core', logo: '/assets/tech_logo/aspnetcore.png', percentage: 70, category: 'Languages', topics: ['MVC', 'Razor Pages', 'API'] },
     
-    // Tools
+    
     { name: 'Git', logo: '/assets/tech_logo/git.png', percentage: 90, category: 'Tools', topics: ['Commits', 'Branches', 'Merging'] },
     { name: 'GitHub', logo: '/assets/tech_logo/github.png', percentage: 85, category: 'Tools', topics: ['Repositories', 'PRs', 'Actions'] },
     { name: 'VS Code', logo: '/assets/tech_logo/vscode.png', percentage: 95, category: 'Tools', topics: ['Extensions', 'Debugging'] },
