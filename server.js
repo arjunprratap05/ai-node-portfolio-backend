@@ -1,8 +1,10 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
+const mongoose = require('mongoose');
 const chatRoutes = require('./routes/chatRoutes');
 const contactRoutes = require('./routes/contactRoutes');
+const skillsRoutes = require('./routes/skillsRoutes');
 const app = express();
 const PORT = process.env.PORT || 5000;
 
@@ -32,8 +34,20 @@ app.use(cors({
 
 app.use(express.json());
 
+const mongoUri = process.env.MONGO_URI || 'mongodb://localhost:27017/portfolio-db';
+
+mongoose.connect(mongoUri)
+  .then(() => {
+    console.log('Successfully connected to MongoDB!');
+  })
+  .catch((err) => {
+    console.error('MongoDB connection error:', err);
+    process.exit(1); 
+  });
+
 app.use('/api', chatRoutes);
 app.use('/api', contactRoutes); 
+app.use('/api', skillsRoutes);
 
 app.get('/', (req, res) => {
   res.status(200).send('AI Backend Server is Running!');
