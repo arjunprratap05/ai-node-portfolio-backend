@@ -51,6 +51,7 @@ app.use('/api', skillsRoutes);
 
 app.get('/', (req, res) => {
   res.status(200).send('AI Backend Server is Running!');
+  res.status(200).send('MongoDB Connected Successfully');
 });
 
 app.use((err, req, res, next) => {

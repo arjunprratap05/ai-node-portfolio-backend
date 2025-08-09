@@ -29,7 +29,7 @@ async function handleChatRequest(req, res) {
 
 async function sendChatSummaryEmail(req, res) {
     const { userName, conversation } = req.body;
-    const recipientEmail = process.env.CHAT_SUMMARY_RECIPIENT_EMAIL || 'arjun.pratap05@gmail.com'; 
+    const recipientEmail = process.env.CHAT_SUMMARY_RECIPIENT_EMAIL; 
 
     if (!userName || !conversation || !Array.isArray(conversation) || conversation.length === 0) {
         return res.status(400).json({ success: false, message: 'Invalid or incomplete conversation data provided.' });
@@ -70,7 +70,6 @@ async function sendChatSummaryEmail(req, res) {
         });
     }
 }
-
 module.exports = {
     handleChatRequest,
     sendChatSummaryEmail 

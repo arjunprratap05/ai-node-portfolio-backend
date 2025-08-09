@@ -71,87 +71,76 @@ async function performGoogleSearch(queries) {
 }
 
 const arjunKnowledgeBase = `
-    Arjun's full name is Arjun Pratap. He is a Problem-solving-oriented Full Stack Developer with 3+ years of experience transforming business challenges into effective, scalable software solutions. He is familiar with ASP.NET and experienced in modern frontend and backend frameworks including ReactJS, Node.js, and REST APIs. He is skilled in using Docker, GitHub Actions, and AWS for cloud-native deployment. Arjun is adept at applying AI tools like ChatGPT, GitHub Copilot, and TensorFlow Lite for productivity, intelligent automation, and rapid development. His contact number is +91-9820903458 and email is arjun.pratap05@gmail.com. He can be found on LinkedIn, GitHub, and mentions a Portfolio.
+General Information
 
-    Professional Summary Highlights:
+Name: Arjun Pratap 
+Location: Ghaziabad, Uttar Pradesh 
+Contact: +91-9820903458 and arjun.pratap05@gmail.com 
+Online Presence: LinkedIn URL : https://www.linkedin.com/in/arjun-pratap-6132941a6
+and GitHub https://github.com/arjunprratap05
 
-    Replaced time-consuming manual data entry with automated Excel upload capability.
+Professional Summary & Experience
 
-    Improved deployment reliability with multi-stage testing pipelines across environments.
+Summary: Arjun is a "problem-solving-oriented Full Stack Developer" with over 3 years of experience. He is familiar with ASP.NET and has experience with modern frameworks like ReactJS, Node.js, and REST APIs. He is also skilled in using Docker, GitHub Actions, and AWS for cloud-native deployment. He utilizes AI tools such as ChatGPT, GitHub Copilot, and TensorFlow Lite to enhance productivity, intelligent automation, and rapid development.
 
-    Enhanced user experience by integrating smart referral workflows and precise filtering options.
 
-    Developed a dynamic blogging system enabling real-time publishing and editing.
+Work History: He has been a Software Developer with ASP.NET Core at NIIT Ltd in Gurugram, India, since September 2022.
 
-    Employed AI copilots and prompt engineering to streamline development and debugging.
 
-    Experience:
+Key Accomplishments:
 
-    Software Developer at NIIT Ltd, Gurugam, India (Sep 2022 - Present):
+Replaced manual data entry with an automated Excel upload system, which streamlined the process and reduced effort.
 
-    Developed an Excel bulk upload system using ASP.NET, streamlining data input and significantly reducing effort.
 
-    Created reusable modules for automation tools, reducing redundant work for the team.
+Improved deployment reliability with multi-stage testing pipelines.
 
-    Leveraged GitHub Copilot to accelerate development of repetitive logic and components.
+Enhanced the user experience by integrating smart referral workflows and precise filtering options.
 
-    Used AI tools to generate test cases and improve test coverage and confidence.
+Developed a dynamic blogging system that allows real-time publishing and editing.
 
-    Collaborated with cross-functional teams to resolve production incidents with minimal delay.
+Used AI copilots and prompt engineering to streamline development and debugging.
 
-    Technical Skills:
+Created reusable modules for automation tools, which reduced redundant work for the team.
 
-    Languages/Frameworks: ASP.NET (Familiar), REST APIs, JavaScript, React.JS, NodeJS, VueJS, Java, Python, PHP.
+Leveraged GitHub Copilot to accelerate the development of repetitive logic and components.
 
-    Cloud & DevOps: Docker, Kubernetes, Git, GitHub Actions, Apache, Nginx, AWS (EC2, S3), Firebase, Appwrite.
+Used AI tools to generate test cases to improve test coverage and confidence.
 
-    AI/ML Tools: TensorFlow Lite, GitHub Copilot, ChatGPT, Prompt Engineering, OCR Integration.
+Collaborated with cross-functional teams to resolve production incidents with minimal delay.
 
-    Data Tools: SQL Server, PostgreSQL, MySQL, MongoDB, PowerBI.
+Projects
+Arjun has completed several projects:
 
-    Soft Skills: Root-Cause Analysis, Agile Methodology, Team Leadership, Communication.
+GitHub Profile Detective: A web application to search and display GitHub user profiles, with plans for further features for Instagram.
+Portfolio Website: A responsive developer portfolio with a downloadable CV, an API-integrated contact form, and live social links.
+Discount Page Optimization: Integrated referral logic and course-based filtering to improve the usability of the coupon experience.
+Mega Blog Clone: A modular blogging platform with AI-assisted formatting and content publishing.
+Task Tracker App: A Kanban-style web application to manage team tasks with status tracking and filtering features.
+Manuscript OCR App: An Android app with real-time handwritten text recognition, offline use, and text-to-speech for accessibility.
+QR Inventory System: A cross-platform, QR-based system for inventory tracking and stock status updates.
+Excel Export Feature: Built downloadable Excel reports with filtering options by date and type for operational efficiency.
 
-    Projects:
+Technical Skills
+Languages/Frameworks: ASP.NET (familiar), REST APIs, JavaScript, React.JS, NodeJS, VueJS, Java, Python, PHP.
+Cloud & DevOps: Docker, Kubernetes, Git, GitHub Actions, Apache, Nginx, AWS (EC2, S3), Firebase, Appwrite.
+AI/ML Tools: TensorFlow Lite, GitHub Copilot, ChatGPT, Prompt Engineering, OCR Integration.
+Data Tools: SQL Server, PostgreSQL, MySQL, MongoDB, PowerBI.
+Soft Skills: Root-Cause Analysis, Agile Methodology, Team Leadership, Communication.
 
-    GitHub Profile Detective (ReactJS, Node.js, Vite, CSS, JavaScript, Asp.Net Core, Vercel, AWS) - Sep 2022 - Present: Developed a web application to search and display GitHub user profiles, providing insights into their activity. (Further features for Instagram planned).
+Education & Certifications
+Education:
+B.Tech in Computer Engineering: Ramrao Adik Institute of Technology, Mumbai University, from 2018-2022, with a CGPA of 7.30/10.
+Senior Secondary (XII): SRP College, Bihar School Examination Board (BSEB) in 2017.
+Secondary (X): Delhi Public School, Patna, Central Board (CBSE) in 2015.
 
-    Portfolio Website (ReactJS, Node.js, Vite, CSS, Google GenerativeAI, JavaScript, Vercel) - Feb 2025 - June 2025: Created a responsive developer portfolio featuring downloadable CV, API-integrated contact form, and live social links. Used AI prompts to enhance UX writing and developer content.
+Certifications:
 
-    Discount Page Optimization (ASP.NET, SQL, JavaScript) - Jul 2024 - Jan 2025: Integrated referral logic and course-based filtering to improve usability of the coupon experience.
-
-    Mega Blog Clone (ReactJS, Vite, Appwrite, Vercel) - Feb 2024 - Jul 2024: Built a modular blogging platform with AI-assisted formatting and content publishing.
-
-    Task Tracker App (ReactJS, Vite) - Jan 2024 - Jul 2024: Designed a Kanban-style web app to manage team tasks with status tracking and filtering features.
-
-    Image Upload Tool (ASP.NET Core, Web API, JavaScript) - Jan 2023 - May 2023: Created a secure upload flow with validation and real-time previews for customer images.
-
-    Excel Export Feature (ASP.NET Core, Web API) - Jun 2022 - Dec 2022: Built downloadable Excel reports with filtering options by date and type for operational efficiency.
-
-    Manuscript OCR App (Android, TensorFlow Lite) - Sep 2021 - May 2022: Enabled real-time handwritten text recognition, offline use, and text-to-speech for accessibility.
-
-    QR Inventory System (Web, Android) - Feb 2021 - Aug 2021: Developed a cross-platform QR-based system for inventory tracking and stock status updates.
-
-    Education:
-
-    Ramrao Adik Institute of Technology, Mumbai University: B.Tech in Computer Engineering (2018-2022), CGPA: 7.30/10.
-
-    SRP College, Bihar School Examination Board (BSEB): Senior Secondary (XII) (2017).
-
-    Delhi Public School, Patna, Central Board (CBSE): Secondary (X) (2015).
-
-    Certifications:
-
-    AWS Certified Solutions Architect Associate (In Progress).
-
-    RDBMS Essentials & T-SQL View Certificate.
-
-    Programming in Java View Certificate.
-
-    Android Development (NIIT) - View Certificate.
-
-    DSA with Java (NPTEL) View Certificate.
-
-    Object-Oriented C++ View Certificate.
+AWS Certified Solutions Architect Associate (in progress).
+RDBMS Essentials & T-SQL.
+Programming in Java.
+Android Development (NIIT).
+DSA with Java (NPTEL).
+Object-Oriented C++.
 `;
 
 let lastIdentifiedSubject = null;

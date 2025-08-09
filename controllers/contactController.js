@@ -11,7 +11,7 @@ const transporter = nodemailer.createTransport({
 async function sendContactEmail(req, res) {
     const { name, email, mobile, subject, message } = req.body;
     
-    const contactRecipientEmail = process.env.CONTACT_FORM_RECIPIENT_EMAIL || 'arjun.pratap05@gmail.com';
+    const contactRecipientEmail = process.env.CONTACT_FORM_RECIPIENT_EMAIL;
 
     if (!name || !email || !mobile || !message) {
         return res.status(400).json({ success: false, message: 'Name, Email, Mobile Number, and Message are required fields.' });
@@ -21,7 +21,7 @@ async function sendContactEmail(req, res) {
         const mailOptions = {
             from: process.env.EMAIL_USER,
             to: contactRecipientEmail,   
-            subject: `Portfolio Contact: ${subject || 'No Subject'} from ${name}`,
+            subject: `Portfolio Form Contact: ${subject || 'No Subject'} from ${name}`,
             html: `
                 <p><strong>Name:</strong> ${name}</p>
                 <p><strong>Email:</strong> ${email}</p>

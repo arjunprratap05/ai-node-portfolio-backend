@@ -77,6 +77,7 @@ async function seedSkillsData(req, res) {
     { name: 'AWS', logo: '/assets/tech_logo/aws.png', percentage: 70, category: 'Tools', topics: ['S3', 'EC2'] },
     { name: 'Kubernetes', logo: '/assets/tech_logo/kubernetes.png', percentage: 70, category: 'Tools', topics: ['Pods', 'Deployments'] },
     { name: 'Jira', logo: '/assets/tech_logo/jira.png', percentage: 70, category: 'Tools', topics: ['Boards', 'Tickets'] },
+    {name: 'PowerBi',logo:'/assets/tech_logo/powerBi.png', percentage: 70, category: 'Tools', topics: ['MySQL', 'Charts'] },
   ];
 
   try {
